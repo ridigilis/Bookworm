@@ -17,6 +17,13 @@ struct ContentView: View {
     
     @State private var showingAddScreen = false
     
+    func deleteBooks(at offsets: IndexSet) {
+        for offset in offsets {
+            let book = books[offset]
+            modelContext.delete(book)
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -35,6 +42,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                .onDelete(perform: deleteBooks)
             }
             .navigationTitle("Bookworm")
             .toolbar {
@@ -42,6 +50,10 @@ struct ContentView: View {
                     Button("Add Book", systemImage: "plus") {
                         showingAddScreen.toggle()
                     }
+                }
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
                 }
             }
             .sheet(isPresented: $showingAddScreen) {
